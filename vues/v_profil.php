@@ -94,7 +94,7 @@
                 <p class="textAlignCenter">
                  <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProfil">
-                Ajouter un profil
+                  Ajouter un profil
                 </button>
                   <ul class="row">
                     <?php foreach($mesProfils as $profil){
@@ -107,22 +107,70 @@
                     <li id="avatar<?=$profil["idProfil"];?>" class="col-md-4 text-center">
                       <article> 
                         <!-- abatar -->
-                        <div class="avatar"> <img class="img-circle imgAvatar" src="<?=$avatar["lienAvatar"];?>" alt="" > 
-                          <!-- Team hover -->
+                        <div class="avatar"> 
+                          <img class="img-circle imgAvatar" src="<?=$avatar["lienAvatar"];?>" alt="" > 
                         </div>
                         <!-- Team Detail -->
                         <div class="team-names margin-top-5">
                           <h5><?= $profil['nomProfil'];?> <i id="<?=$profil['idProfil'];?>" data-toggle="tooltip" data-placement="top" title="Supprimer le profil" class="suppProfil fas fa-trash-alt"></i></h5>
                           <p>Taille Haut: <?= nomTaille($profil['tailleBasProfil']);?><br>
                           Taille Bas:  <?= nomTaille($profil['tailleHautProfil']);?></p>
-                          <button id="edit" class="btn btnSmall"><i class="fas fa-user-edit"></i> Modifier</button>
+                          <a  class="btn btnSmall blanc" href="index.php?c=profil&partie=modifyProfil&id=<?= $profil["idProfil"];?>" ><i class="fas fa-user-edit"></i> Modifier</button></a>
                         </div>
                       </article>
                     </li>
+              
+
+           
                         <?php } ?>
                   </ul>       
-      </div>
-    </section>
+      </div>     
+
+    <div id='modifyProfil' class="col-sm-8 " style="display:none">
+    <?php if(isset($_GET['id'])){
+    if(verifProfilById($_GET['id'])){
+    $monProfil = monProfil($_GET['id']);
+    genererError(27);?>
+    <p>Nom profil: <b><?= $profil['nomProfil'];?></b></p>
+    <ul class="row margin-bottom-5">
+        <form action="index.php?c=profil&action=editProfil" method='post'>
+          <!-- TAILLE DE HAUT -->
+          <li class="col-md-6">
+            <label>Taille de haut</label>
+              <select class="form-control" id="updTailleProfilH" name="tailleHaut">
+                <?php foreach ($tailleHaut as $haut){
+                  $s = '';
+                  if($haut['idTaille'] ==  $monProfil['tailleHautProfil']){ $s= 'Selected'; }
+                  echo "<option ".$s." value=".$haut['idTaille'].">".$haut['nomTaille']."</option>";
+                }?> 
+              </select>
+          </li>
+          <!-- TAILLE DE BAS -->
+          <li class="col-md-6">
+            <label>Taille de pantalon</label>
+              <select class="form-control" id="updTailleProfilB" name="tailleBasProfil">
+                <?php foreach ($taillePantalon as $pantalon){
+                    $s = '';
+                    if($pantalon['idTaille'] ==  $monProfil['tailleBasProfil']){ $s= 'Selected'; }
+                  echo "<option ".$s." value=".$pantalon['idTaille'].">".$pantalon['nomTaille']."</option>";
+                }?> 
+              </select>
+          </li>
+          <div class="col-md-12 textAlignCenter">
+            <hr>
+            <input class="transparent" id="UpdIdProfil" value='<?=$_GET['id'];?>'>
+            <button type="button" class="btn btn-secondary btnUpdateProfil" ><i class="fas fa-edit"></i> Modifier</button>
+          </div>
+        </form>
+      </ul>
+      <?php }else {
+        genererError(28);
+      }
+      } else{ 
+         genererError(28);
+      }?>
+    </div>
+  </section>
 
 
 
@@ -202,10 +250,30 @@
       </div>
     </div>
   </div>
-</div>
 
+</div>
   <script>
     
+  $('.btnUpdateProfil').click(function(e){ 
+    select = document.getElementById("updTailleProfilB");
+    choice = select.selectedIndex  // Récupération de l'index du <option> choisi
+    tailleB = select.options[choice].value; // Récupération du texte du <option> d'index "choice"
+
+    select = document.getElementById("updTailleProfilH");
+    choice = select.selectedIndex  // Récupération de l'index du <option> choisi
+    tailleH = select.options[choice].value; // Récupération du texte du <option> d'index "choice"
+
+    idProfil = document.getElementById('UpdIdProfil').value;
+
+    param = 'tailleH='+tailleH+'&tailleB='+tailleB+'&idProfil='+idProfil;
+    url= 'index.php?c=profil&action=editProfil&ajx=1&'+param;
+    messageRetour = '';
+    reponse= postAjax(param,url,messageRetour);
+    rep = reponse.responseText;
+    rep = jQuery.parseJSON(rep);
+    alertJs(rep.success,rep.msg);
+  });
+
   $('#btnModifyGeneral').click(function(e){ 
     Email = document.getElementById('email').value;
     tel = document.getElementById('tel').value;
@@ -255,6 +323,7 @@
   }else{
     divPrecedente = 'general';
   }
+  console.log(divPrecedente)
   document.getElementById(divPrecedente).style.display = 'block';
 </script>
 

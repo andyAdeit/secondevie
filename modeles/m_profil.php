@@ -24,6 +24,20 @@ function addProfil($tailleH,$tailleB,$genre,$idImg,$idClient,$nomProfil){
 }
 
 
+function updateProfil($tailleBasProfil,$tailleHaut,$idProfil)
+{
+	$conditions = array();
+	$values = array();
+	array_push($conditions, array('nameChamps'=>'idProfil','type'=>'=','name'=>'idProfil','value'=>$idProfil));
+	array_push($values, array('nameChamps'=>'tailleBasProfil','name'=>'tailleBasProfil','value'=>$tailleBasProfil));
+	array_push($values, array('nameChamps'=>'tailleHautProfil','name'=>'tailleHautProfil','value'=>$tailleHaut));
+	$req =  new myQueryClass('profil',$conditions,'',$values);
+	$r = $req->myQueryUpdate();
+	$conn = null ; //Quitte la connexion
+	
+}
+
+
 function mesProfils($id){
 	$conditions = array();
 	array_push($conditions, array('nameChamps'=>'idClient','type'=>'=','name'=>'idClient','value'=>$id));
@@ -47,9 +61,12 @@ function verifProfilById($idProfil){
 	array_push($conditions, array('nameChamps'=>'idProfil','type'=>'=','name'=>'idProfil','value'=>$idProfil));
 	$req =  new myQueryClass('profil',$conditions);
 	$r = $req->myQuerySelect();
+	if(isset($r[0]['idClient'])){
 	if($r[0]['idClient'] == $_SESSION['id']){
 		return true;
 	}else{
+		return false;
+	}}else{
 		return false;
 	}
 }	

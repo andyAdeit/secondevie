@@ -51,6 +51,14 @@ switch ($action){
 		redirectUrl("index.php?c=profil&partie=foyer");
 	break;
 
+
+	case 'editProfil':
+		if(verifProfilById($_POST['idProfil'])){
+			updateProfil($_POST['tailleB'],$_POST['tailleH'],$_POST['idProfil']);
+		}
+		echo reponse_json(true,'','Le profil est bien modifié!');
+	break;
+
 	case 'supprimerprofil':
 		if(verifProfilById($_POST['id'])){ // verifie si le profil est à lui
 			deleteProfil($_POST['id']);
