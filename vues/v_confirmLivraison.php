@@ -4,10 +4,13 @@
  <?php include('./assets/inc/header.php');?>
   <?php include('./assets/inc/menu.php');?> 
 
+
+
   
   <!-- Content -->
   <div id="content"> 
   
+
  
     <section class="padding-top-30 padding-bottom-100 light-gray-bg shopping-cart small-cart">
       <div class="container">
