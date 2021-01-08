@@ -12,7 +12,10 @@
 	unset($_SESSION['livraison']);
 	header("Location:index.php");
 ?>
+
+
 <SCRIPT LANGUAGE="JavaScript">
 document.location.href="index.html"
 </SCRIPT>
+
 
