@@ -169,13 +169,45 @@ function voirNbPanier(){
 // Verifie les réservations dans le panier si ça fait plus d'une heure qu'il est réservé
 function supprReservationProduitPanier(){
     foreach ($_SESSION['panier']->getCollection() as $produitPanier) {
-        $difference = time() - $produitPanier->getDateReservation(); // diffrence entre les deux heures
+        $produit = voirProduitById($produitPanier->getId());
+        
+        $year = substr($produit['dateReservation'], 0, -15);   
+        $month = substr($produit['dateReservation'], 5, 2);   
+        $day = substr($produit['dateReservation'], 8,2); 
+        $heure = substr($produit['dateReservation'], 11,2); 
+        $minute = substr($produit['dateReservation'], 14,2);     
+    
+        // récupère la date du jour
+        $date_string = mktime($heure,$minute,0,$month,$day,$year);
+        $dateTimeStamp = ($date_string +3600);
+        $difference = (time() + 3600) - $dateTimeStamp; // diffrence entre les deux heures
+        var_dump($difference);
         if($difference >= 3600){ // temps de réservation au dessus d'une heure
             $_SESSION['panier']->supprimer($produitPanier->getId()); // supprime le produit du panier
             changeProduitStatut($produitPanier->getId(),'0',null,null,null);
         }
     }
 }
+
+
+// Verifie les réservations dans le panier si ça fait plus d'une heure qu'il est réservé
+function tempsRestantReservation($id){
+        $produit = voirProduitById($id);
+        $year = substr($produit['dateReservation'], 0, -15);   
+        $month = substr($produit['dateReservation'], 5, 2);   
+        $day = substr($produit['dateReservation'], 8,2); 
+        $heure = substr($produit['dateReservation'], 11,2); 
+        $minute = substr($produit['dateReservation'], 14,2);     
+    
+        // récupère la date du jour
+        $date_string = mktime($heure,$minute,0,$month,$day,$year);
+        $dateTimeStamp = ($date_string +3600);
+        $dateActuelle = (time() + 3600);
+        $d = $dateActuelle - $dateTimeStamp;
+        $tempsRestant = (60 - round($d/60));
+        return $tempsRestant; 
+}
+
 
 
 // Quand se connecte réaffecte les produit reserve à lui 

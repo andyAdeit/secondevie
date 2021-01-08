@@ -14,22 +14,22 @@
       <div class="row"> 
       <?php if($error == true){ echo genererError(16); } ?>
         <div class="col-sm-7">
+        <?= genererError(29);?>
           <table id="test" class="table">
                   <thead>
                     <tr>
                       <th scope="col">Produit</th>
                       <th scope="col">Nom</th>
                       <th scope="col">Prix</th>
-                      <th scope="col">Réduction</th>
-                      <!--<th scope="col"></th>-->
+                      <th scope="col">Temps Restant de réservation</th>
                     </tr>
                   </thead>
                   <tbody>
-                  <?php    foreach ($_SESSION['panier']->getCollection() as $produitPanier) { ?>
+                  <?php    foreach ($_SESSION['panier']->getCollection() as $produitPanier) {?>
                     <tr  id="produit-panier-<?=$produitPanier->getId();?>" >
                       <th scope="row"><a class="item-img"> <img class="media-object" src="<?= $produitPanier->getImage();?>" alt="photo du produit"> </a></th>
                       <td><?= $produitPanier->getNom();?></td>
-                      <td><?= $produitPanier->getNom();?></td>
+                     
                       <td>
                       <?php if($produitPanier->getReduction() != '0'){?>
                   <span class="price"><del><?= $produitPanier->getPrix();?>€</del> <?= $produitPanier->getPrix() * (1- $produitPanier->getReduction());?>€ </span>
@@ -37,6 +37,7 @@
                   <span class="price"><?= $produitPanier->getPrix();?>€</span> 
                 <?php }?>
                       </td>
+                      <td><?= tempsRestantReservation($produitPanier->getId());?> minutes</td>
                   <?php /*   <td id="panierSuppr<?=$produitPanier->getId();?>" ><a class="supprPanierproduit supprPanierLigne" href="#."><i  id="<?=$produitPanier->getId();?>"  class="icon-close"></i></a></td>
                   */ ?> </tr>
                     <?php }?>

@@ -306,8 +306,10 @@ function changeProduitDateReservationNull()
     
     $dateMoinsUneHeure = date("Y-m-d H:i:s", $dateMoinsUneHeure); 
     
-	array_push($conditions, array('nameChamps'=>'dateReservation','type'=>'<','name'=>'dateReservatio','value'=>$dateMoinsUneHeure));
+    array_push($conditions, array('nameChamps'=>'dateReservation','type'=>'<','name'=>'dateReservatio',
+    'value'=>$dateMoinsUneHeure));
     array_push($values, array('nameChamps'=>'idClient','name'=>'idClient','value'=>null));
+    array_push($values, array('nameChamps'=>'etatDuProduit','name'=>'etatDuProduit','value'=>0));
     array_push($values, array('nameChamps'=>'dateReservation','name'=>'dateReservation','value'=>null));
 	$req =  new myQueryClass('produit',$conditions,'',$values);
 	$r = $req->myQueryUpdate();
